@@ -51,13 +51,13 @@ namespace VehicleControls
         {
             if (car.IsEngineRunning)
             {
-                Screen.ShowNotification("Engine is now ~r~off~w~.");
+                Screen.ShowNotification("Motor ~r~abgeschaltet~w~.");
                 car.IsDriveable = false;
                 car.IsEngineRunning = false;
             }
             else
             {
-                Screen.ShowNotification("Engine is now ~g~on~w~.");
+                Screen.ShowNotification("Motor ~g~angeschaltet~w~.");
                 car.IsDriveable = true;
                 car.IsEngineRunning = true;
             }
@@ -100,12 +100,12 @@ namespace VehicleControls
 
             if (doorLocked)
             {
-                Screen.ShowNotification("Doors are ~g~unlocked~w~.");
+                Screen.ShowNotification("Türen ~g~aufgeschlossen~w~.");
                 Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, car, 0);
             }
             else
             {
-                Screen.ShowNotification("Doors are ~r~locked~w~.");
+                Screen.ShowNotification("Türen ~r~abgeschlossen~w~.");
                 Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, car, 2);
             }
         }
@@ -114,14 +114,14 @@ namespace VehicleControls
         {
             List<dynamic> doors = new List<dynamic>
             {
-                "Front Left",
-                "Front Right",
-                "Back Left",
-                "Back Right",
-                "Hood",
-                "Trunk"
+                "Vorne Links",
+                "Vorne Rechts",
+                "Hinten Links",
+                "Hinten Rechts",
+                "Motorraum",
+                "Kofferraum"
             };
-            var newItem = new UIMenuListItem("Toggle Door", doors, 0);
+            var newItem = new UIMenuListItem("Tür öffnen", doors, 0);
             menu.AddItem(newItem);
 
             menu.OnItemSelect += (sender, item, index) =>
@@ -158,19 +158,19 @@ namespace VehicleControls
             bool doorBroken = Function.Call<bool>(Hash.IS_VEHICLE_DOOR_DAMAGED, car, index);
             if (doorBroken)
             {
-                Screen.ShowNotification(ERROR + "Door is broken.");
+                Screen.ShowNotification(ERROR + "Tür ist nicht ~r~vorhanden~w~.");
                 return;
             }
 
             float doorAngle = Function.Call<float>(Hash.GET_VEHICLE_DOOR_ANGLE_RATIO, car, index);
             if (doorAngle == 0) // Door is closed
             {
-                Screen.ShowNotification(doorName + " Door is now ~g~open~w~.");
+                Screen.ShowNotification(doorName + " ~g~geöffnet~w~.");
                 Function.Call(Hash.SET_VEHICLE_DOOR_OPEN, car, index, false, false);
             }
             else
             {
-                Screen.ShowNotification(doorName + " Door is now ~r~shut~w~.");
+                Screen.ShowNotification(doorName + "  ~r~geschlossen~w~.");
                 Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, car, index, false);
             }
         }
@@ -179,13 +179,13 @@ namespace VehicleControls
         {
             List<dynamic> speeds = new List<dynamic>()
             {
-                "None"
+                "0 KM/H"
             };
             for (int i = 30; i < 121; i = i + 10)
             {
                 speeds.Add(i + " KM/H");
             }
-            UIMenuListItem newItem = new UIMenuListItem("Lock Max Speed", speeds, 0);
+            UIMenuListItem newItem = new UIMenuListItem("Maximale Geschwindigkeit sperren", speeds, 0);
             menu.AddItem(newItem);
 
             menu.OnItemSelect += (sender, item, index) =>
@@ -218,16 +218,16 @@ namespace VehicleControls
         private void LockSpeed(Vehicle car, UIMenuListItem item)
         {
             string[] itemName = item.IndexToItem(item.Index).Split(' ');
-            if (itemName[0] == "None")
+            if (itemName[0] == "0 KM/H")
             {
                 car.MaxSpeed = int.MaxValue;
-                Screen.ShowNotification($"Speedlimit has been removed.");
+                Screen.ShowNotification($"Geschwindigkeits Limit wurde ~r~entfernt~w~.");
                 return;
             }
 
             float itemSpeed = float.Parse(itemName[0]) / 3.6f;
             car.MaxSpeed = itemSpeed;
-            Screen.ShowNotification($"Speed has been limited to {itemName[0]} {itemName[1]}.");
+            Screen.ShowNotification($"Geschwindigkeit Limit wurde zu ~g~{itemName[0]} {itemName[1]}~w~ gesetzt.");
         }
 
         private void AddSaveVehicleItem(UIMenu menu)
@@ -251,7 +251,7 @@ namespace VehicleControls
                 }
 
                 SaveVehicle(car);
-                Screen.ShowNotification("Saved vehicle.");
+                Screen.ShowNotification("Fahrzeug ~g~gespeichert~w~.");
             };
         }
 
@@ -275,7 +275,7 @@ namespace VehicleControls
         {
             MenuPool menuPool = new MenuPool();
 
-            UIMenu menu = new UIMenu("Vehicle Controls", "");
+            UIMenu menu = new UIMenu("Fahrzeug Interaktion", "");
             menuPool.Add(menu);
 
             AddEngineItem(menu);
