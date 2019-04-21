@@ -10,14 +10,14 @@ namespace VehicleControls
 {
     public class VehicleControls : BaseScript
     {
-        private static string ERROR = "~r~Error: ";
-        private static string ERROR_NOCAR = ERROR + "You aren't in a vehicle nor do you have a saved vehicle.";
+        private static string ERROR = "~r~Fehler: ";
+        private static string ERROR_NOCAR = ERROR + "~r~Du bist nicht in einem gespeicherten Fahrzeug~w~.";
 
         private Vehicle savedVehicle;
 
         private void AddEngineItem(UIMenu menu)
         {
-            var newItem = new UIMenuItem("Toggle Engine");
+            var newItem = new UIMenuItem("Motor anschalten/abschalten");
             menu.AddItem(newItem);
 
             menu.OnItemSelect += (sender, item, index) =>
@@ -65,7 +65,7 @@ namespace VehicleControls
 
         private void AddDoorLockItem(UIMenu menu)
         {
-            var newItem = new UIMenuItem("Toggle Door Lock", "NOTE: This will also set this vehicle as saved vehicle.");
+            var newItem = new UIMenuItem("Fahrzeug aufschließen/abschließen");
             menu.AddItem(newItem);
 
             menu.OnItemSelect += (sender, item, index) =>
@@ -100,12 +100,12 @@ namespace VehicleControls
 
             if (doorLocked)
             {
-                Screen.ShowNotification("Türen ~g~aufgeschlossen~w~.");
+                Screen.ShowNotification("Fahrzeug ~g~aufgeschlossen~w~.");
                 Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, car, 0);
             }
             else
             {
-                Screen.ShowNotification("Türen ~r~abgeschlossen~w~.");
+                Screen.ShowNotification("Fahrzeug ~r~abgeschlossen~w~.");
                 Function.Call(Hash.SET_VEHICLE_DOORS_LOCKED, car, 2);
             }
         }
